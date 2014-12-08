@@ -1,0 +1,10 @@
+# setup
+
+Python3 + Pygame
+
+```
+brew install sdl sdl_image sdl_mixer sdl_ttf portmidi
+brew tap homebrew/headonly
+brew install smpeg --HEAD
+sudo pip3 install hg+http://bitbucket.org/pygame/pygame
+```
