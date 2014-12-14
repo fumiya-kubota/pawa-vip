@@ -26,7 +26,7 @@ class Director:
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
-                    self.quit()
+                    self.quit_flag = True
 
             # Detect events
             self.scene.on_event(events)
@@ -53,6 +53,7 @@ class Director:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     keep_playing = False
+                    self.quit_flag = True
 
             all_sprites.clear(self.screen, self.scene.background)
             all_sprites.update()
@@ -66,7 +67,6 @@ class Director:
         """
         self.fade_out()
         self.scene = scene
-
         self.screen.blit(scene.background, (0, 0))
         self.fade_in()
 
@@ -74,6 +74,3 @@ class Director:
         self.scene = scene
         self.screen.blit(scene.background, (0, 0))
         pygame.display.flip()
-
-    def quit(self):
-        self.quit_flag = True

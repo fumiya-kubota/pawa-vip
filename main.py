@@ -1,5 +1,5 @@
 import sys
-from Scene import Director, Scene
+from Scene import Director
 import pygame
 import pygame.locals
 from pawavip.TitleScene import TitleScene
@@ -9,14 +9,28 @@ image.MAIN_DIR = ''
 SCREEN_RECT = pygame.Rect((0, 0, 640, 480))
 
 
-def main():
+def main(mode):
     pygame.init()
-    director = Director.Director('PawaPoke VIP!', SCREEN_RECT)
-    scene = TitleScene(director)
-    director.set_scene(scene)
-    director.loop()
+    if mode is None:
+        director = Director.Director('PawaPoke VIP!', SCREEN_RECT)
+        scene = TitleScene(director)
+        director.set_scene(scene)
+        director.loop()
+    else:
+        if mode == 'making':
+            from pawavip.MakingScene import MakingScene
+            director = Director.Director('キャラメイクテスト', SCREEN_RECT)
+            scene = MakingScene(director)
+        elif mode == 'message':
+            from pawavip.SuccessMainScene import SuccessMainScene
+            director = Director.Director('キャラメイクテスト', SCREEN_RECT)
+            scene = SuccessMainScene(director)
+
+        director.set_scene(scene)
+        director.loop()
+
     sys.exit()
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1] if len(sys.argv) > 1 else None)

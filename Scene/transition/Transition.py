@@ -18,7 +18,6 @@ class CrossFade(pygame.sprite.Sprite):
 
         # make a Surface to be used as our fader
         # The size is dynamically based on the size of the screen
-        print(screen)
         self.image = pygame.Surface(screen.get_size())
         self.image = self.image.convert()
         self.image.fill((0, 0, 0))
