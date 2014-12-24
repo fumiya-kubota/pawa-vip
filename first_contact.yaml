@@ -1,0 +1,17 @@
+- scene: scene.png
+  bgm: bgm.mp3
+  appearance:
+    - pawapoke
+    - left
+  talk:
+    speaker: pawapoke
+    paragraph:
+      - say: さて、ここが図書館か。
+        play: se.wav
+        expression: smile
+        color:
+          - [0, 1]
+          - green
+        move: right
+      - say: あの手紙について、何か手がかりがあるかもしれないな。
+      - say: 一応探してみるか。

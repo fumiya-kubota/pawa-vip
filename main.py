@@ -6,7 +6,7 @@ from pawavip.TitleScene import TitleScene
 from utils import image
 
 image.MAIN_DIR = ''
-SCREEN_RECT = pygame.Rect((0, 0, 640, 480))
+SCREEN_RECT = pygame.Rect((0, 0, 800, 600))
 
 
 def main(mode):

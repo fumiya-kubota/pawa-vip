@@ -21,6 +21,7 @@ class Director:
 
         while not self.quit_flag:
             self.clock.tick(60)
+            print(self.clock.get_fps())
 
             # Exit events
             events = pygame.event.get()
@@ -50,6 +51,7 @@ class Director:
         keep_playing = True
         while keep_playing and not fade.complete:
             self.clock.tick(60)
+            pygame.display.set_caption(with_fps)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     keep_playing = False

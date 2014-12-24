@@ -1,10 +1,12 @@
 __author__ = 'sasau'
 
 import pygame
+from utils import image
 
-SIDE_MARGIN = 10
-VERTICAL_MARGIN = 10
-MAX_LINE = 2
+LEFT_MARGIN = 20
+RIGHT_MARGIN = 3
+VERTICAL_MARGIN = 20
+MAX_LINE = 3
 MARKS = {
     '。',
     '、'
@@ -34,14 +36,12 @@ class Character(pygame.sprite.Sprite):
 class MessageWindow(object):
     def __init__(self, rect):
         self.background = pygame.Surface((rect.width, rect.height))
-        self.background.fill(pygame.Color('green'))
+        self.background.fill(pygame.Color('yellow'))
+        # bg_image = image.load_image('message.png')
+        # self.background.blit(bg_image, (0, 0))
         self.character_group = pygame.sprite.RenderUpdates()
 
         self._rect = rect
-        self._text_area = pygame.Surface((rect.width - SIDE_MARGIN * 2, rect.height - VERTICAL_MARGIN * 2))
-        self._text_area.fill(pygame.Color('red'))
-        self._text_area.set_clip(pygame.Rect(0, 0, 200, 142))
-        self.background.blit(self._text_area, (SIDE_MARGIN, VERTICAL_MARGIN))
         self.skip = False
         self._waiting = False
 
@@ -81,11 +81,11 @@ class MessageWindow(object):
                     self._character_cursor += 1
                     character = self._lines[self._line_number][self._character_cursor]
                     self._new_line()
-                elif character.c not in MARKS and self._rect.width < SIDE_MARGIN * 2 + self._origin_x + character.rect.width:
+                elif character.c not in MARKS and self._rect.width < LEFT_MARGIN + RIGHT_MARGIN + self._origin_x + character.rect.width:
                     self._new_line()
 
                 self._current_line.append(character)
-                character.rect.left = SIDE_MARGIN + self._origin_x
+                character.rect.left = LEFT_MARGIN + self._origin_x
                 character.rect.top = self._rect.top + VERTICAL_MARGIN + character.rect.height * self._next_show_line
                 self.character_group.add(character)
                 self._character_cursor += 1

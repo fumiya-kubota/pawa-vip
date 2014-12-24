@@ -7,7 +7,7 @@ __author__ = 'sasau'
 
 def load_image(file):
     """loads an image, prepares it for play"""
-    file = os.path.join(MAIN_DIR, 'data', file)
+    file = os.path.join(MAIN_DIR, 'resource', file)
     try:
         surface = pygame.image.load(file)
     except pygame.error:
