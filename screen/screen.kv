@@ -1,0 +1,52 @@
+
+<AdventureScreen>
+    board: message_board
+    stage: stage
+    Widget:
+        size_hint: 1., None
+        pos_hint: {'top': 1}
+        height: 125
+        canvas.before:
+            Color:
+                rgb: 1, 1, 0
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+    Stage:
+        id: stage
+        size_hint: 1., None
+        pos_hint: {'top': 1 - 125. / 600}
+        height: 250
+        canvas.before:
+            Color:
+                rgb: 0, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+    MessageBoard:
+        id: message_board
+        size_hint: 1., None
+        pos_hint: {'bottom': 1}
+        height: 225
+        on_touch_down: root.click()
+        canvas.before:
+            Color:
+                rgb: 1, 0, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        message_area: area
+        Widget:
+            id: area
+            size: 780, 190.
+            x: self.parent.x + 10
+            top: self.parent.height - 25
+            canvas.before:
+                Color:
+                    rgb: 0, 0, 0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
