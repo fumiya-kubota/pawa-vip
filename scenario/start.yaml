@@ -1,30 +1,16 @@
 - appear: pawapoke
-- speaker: pawapoke
-  say: 'なんかここに来いって言われたけど、誰もいないな。'
-- speaker: pawapoke
-  say: 'まあいいや、ついでだから今の機能についておさらいしておこうか。'
-- speaker: pawapoke
-  say: '今の仕様だと一画面に収まるのは５行くらいかな。'
+  expression: normal
+  say: '一文字30px固定で行間に15pxで表示してる。'
   clean: True
 - speaker: pawapoke
-  say: 'あ。'
+  say: 'あいうえおかきくけこさしすせそたちつてとなにぬねのまみむめも'
 - speaker: pawapoke
-  say: 'い。'
+  say: '横は２６字で改行。'
 - speaker: pawapoke
-  say: 'う。'
-- speaker: pawapoke
-  say: 'え。'
-- speaker: pawapoke
-  say: 'お。'
-
-- speaker: pawapoke
-  say: '明示的に改行させることもできるけど、こんな風に幅が収まりきらなかった分は自動で改行していくよ。'
-- speaker: pawapoke
-  say: 'まあ、幅が収まるあたりで区切ってほしいけどね。'
+  say: 'ちょっとスカスカかな？'
 - speaker: pawapoke
   say: 'それと、slow命令ってのがあるんだ。'
   clean: True
-
 - speaker: pawapoke
   say: 'それをやると、ゆっくり表示されるようになる。'
 - speaker: pawapoke
@@ -39,10 +25,16 @@
   say: 'これが0.3秒だよ。'
   slow: 0.3
 - speaker: pawapoke
+  say: '逆に、早くすることもできるんだ。'
+- speaker: pawapoke
+  say: '0.04より小さくすれば数字的には通常の表示より早くなる。'
+- speaker: pawapoke
+  say: 'でも、1フレームに1文字以上は早くならないから、あまり意味がないかもしれないね。'
+- speaker: pawapoke
   say: '何度か使っているけど、clean命令を入れると・・・'
   clean: True
 - speaker: pawapoke
   say: '表示されているものがクリアされるよ。'
   clean: True
 - speaker: pawapoke
-  say: '話している人が変わると、自動で挿入されるから、入れなくても良いよ。'
+  say: '話している人が変わると、自動で挿入されるから、その場合は入れなくても大丈夫。'

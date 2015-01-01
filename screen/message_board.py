@@ -10,9 +10,11 @@ SLOW_COMMAND = 'slow'
 COMMANDS = (SAY_COMMAND, CLEAN_COMMAND, SLOW_COMMAND)
 
 FONT_SIZE = 30
-MAX_ROW = 4
+MAX_ROW = 3
+MAX_COL = 24
 SPEED_DEFAULT = 0.04
 SLOW_SPEED_DEFAULT = 0.1
+LINE_SPAN = 10
 
 
 class Letter(Label):
@@ -135,11 +137,11 @@ class MessageBoard(Widget):
 
     def _calc_pos(self):
         origin_x = self.message_area.x
-        origin_y = self.message_area.height + self.message_area.y - FONT_SIZE
-        return origin_x + FONT_SIZE * self._col_number, origin_y - (FONT_SIZE + 10) * min(self._row_number, MAX_ROW)
+        origin_y = self.message_area.height + self.message_area.y - FONT_SIZE - 20
+        return origin_x + FONT_SIZE * self._col_number, origin_y - (FONT_SIZE + LINE_SPAN) * min(self._row_number, MAX_ROW)
 
     def _next_col(self):
-        if self.message_area.width <= (self._col_number + 1) * FONT_SIZE:
+        if self._col_number == MAX_COL:
             self._next_row()
         else:
             self._col_number += 1
@@ -157,7 +159,7 @@ class MessageBoard(Widget):
 
         animation = None
         for l in self._display_letters:
-            animation = Animation(pos=(l.x, l.y + (FONT_SIZE + 10)), duration=0.02 if animate else 0.0)
+            animation = Animation(y=l.y + (FONT_SIZE + LINE_SPAN), duration=0.02 if animate else 0.0)
             animation.start(l)
         animation.bind(on_complete=completion)
 

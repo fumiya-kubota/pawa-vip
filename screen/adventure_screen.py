@@ -31,13 +31,11 @@ class AdventureScreen(Screen):
     def on_enter(self, *args):
         Clock.schedule_interval(self.update, 1.0 / 60.0)
         self.proceed_scenario()
-        print self.board.message_area.x
 
     def on_leave(self, *args):
         Clock.unschedule(self.update, True)
 
     def click(self):
-        print self.board.message_area.x
         if self.board.processing:
             self.board.display_all()
             return
