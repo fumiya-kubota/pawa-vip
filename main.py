@@ -1,7 +1,6 @@
-import sys
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
-from screen.adventure_screen import AdventureScreen
+from pawavip.adventure_screen import AdventureScreen
 
 
 class PawaVipApp(App):

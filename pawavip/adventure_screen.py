@@ -1,14 +1,14 @@
 # cording:utf-8
 from kivy.properties import ObjectProperty
+
 from kivy.clock import Clock
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-import yaml
-from screen.general_event import GeneralEvent
-from screen.message_board import MessageBoard
-from screen.stage import Stage
+from pawavip.stage import Stage
+from pawavip.message_board import MessageBoard
+from pawavip.manager import sample_scenario
 
-Builder.load_file('screen/screen.kv')
+Builder.load_file('pawavip/adventure.kv')
 
 
 class AdventureScreen(Screen):
@@ -18,11 +18,11 @@ class AdventureScreen(Screen):
     #: :type:Stage
     stage = ObjectProperty(None)
 
+    #: :type:GeneralEvent
+    event = None
+
     def __init__(self, **kw):
         super(AdventureScreen, self).__init__(**kw)
-        with open('scenario/start.yaml') as fp:
-            scenario = yaml.load(fp)
-        self.event = GeneralEvent(scenario)
 
     def update(self, dt):
         self.board.update(dt)
@@ -30,6 +30,8 @@ class AdventureScreen(Screen):
 
     def on_enter(self, *args):
         Clock.schedule_interval(self.update, 1.0 / 60.0)
+        sample_scenario.scenario_name = 'sample'
+        self.event = sample_scenario.pop_fixed_event_before()
         self.proceed_scenario()
 
     def on_leave(self, *args):
@@ -52,3 +54,5 @@ class AdventureScreen(Screen):
                     return
                 self.board.set_next(command)
                 self.stage.set_next(command)
+            else:
+                self.board.waiting = True

@@ -1,0 +1,4 @@
+name: サンプルシナリオ
+event_calendar:
+    0:
+      before: start
