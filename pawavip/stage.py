@@ -1,21 +1,15 @@
+from kivy.properties import ObjectProperty
 from kivy.uix.anchorlayout import AnchorLayout
-from kivy.animation import Animation, AnimationTransition
-from kivy.uix.image import Image
-import yaml
-from kivy.uix.button import Button
-from kivy.uix.widget import Widget
-
+from pawavip.stage_layout import StageLayout
 
 APPEAR_COMMAND = 'appear'
 EXPRESSION_COMMAND = 'expression'
 COMMANDS = (APPEAR_COMMAND, )
 
-
-class Actor(Widget):
-    pass
-
-
 class Stage(AnchorLayout):
+    # : :type: StageLayout
+    stage_layout = ObjectProperty(None)
+
     # : :type: dict
     _data = None
 
@@ -48,4 +42,4 @@ class Stage(AnchorLayout):
         self._data = val
         if val:
             if APPEAR_COMMAND in val:
-                pass
+                self.stage_layout.appear(val[APPEAR_COMMAND])

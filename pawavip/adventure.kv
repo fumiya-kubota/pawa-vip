@@ -20,6 +20,15 @@
         anchor_y: 'bottom'
         anchor_x: 'left'
         height: 250
+        stage_layout: stage_layout
+        StageLayout:
+            id: stage_layout
+            canvas.before:
+                Color:
+                    rgba: 1, 0, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
 
     MessageBoard:
         id: message_board

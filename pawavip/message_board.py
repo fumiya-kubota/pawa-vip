@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from kivy.properties import ObjectProperty
 from kivy.animation import Animation
 from kivy.uix.label import Label
@@ -6,12 +8,13 @@ from kivy.uix.widget import Widget
 SAY_COMMAND = 'say'
 CLEAN_COMMAND = 'clean',
 SLOW_COMMAND = 'slow'
+CONTINUE_COMMAND = 'continue'
 
 COMMANDS = (SAY_COMMAND, CLEAN_COMMAND, SLOW_COMMAND)
 
 FONT_SIZE = 30
 MAX_ROW = 3
-MAX_COL = 24
+MAX_COL = 23
 SPEED_DEFAULT = 0.04
 SLOW_SPEED_DEFAULT = 0.1
 LINE_SPAN = 10
@@ -63,6 +66,9 @@ class MessageBoard(Widget):
     # : :type: list
     _display_letters = []
 
+    # : :type: bool
+    _continue = False
+
     def update(self, dt):
         if self.data:
             self._total_time += dt
@@ -108,7 +114,6 @@ class MessageBoard(Widget):
     def data(self, val):
         self._data = val
         if val:
-            self.waiting = True
             self.processing = True
             # clean
             if val.get('clean'):
@@ -120,25 +125,31 @@ class MessageBoard(Widget):
             else:
                 self._speed = SPEED_DEFAULT
 
-            if self._letters and not self._col_number == 0:
+            if not self._continue and self._letters and not self._col_number == 0:
                 self._next_row()
 
+            text_color = val.get('color', (1, 1, 1, 1))
             for c in val[SAY_COMMAND]:
                 l = Letter(text=c, font_size=FONT_SIZE, font_name='resource/fonts/rounded-mgenplus-1c-regular.ttf',
-                           size=(FONT_SIZE, FONT_SIZE), size_hint=(None, None))
+                           size=(FONT_SIZE, FONT_SIZE), size_hint=(None, None), color=text_color)
                 self._letters.append(l)
                 l.pos = self._calc_pos()
                 l.col_number = self._col_number
                 l.row_number = self._row_number
                 self._message_queue[-1].append(l)
                 self._next_col()
+
+            # continue命令が入っている場合は改行されない、入力待ちにもならない。
+            self._continue = CONTINUE_COMMAND in val
+            self.waiting = not self._continue
         else:
             self.waiting = False
 
     def _calc_pos(self):
         origin_x = self.message_area.x
         origin_y = self.message_area.height + self.message_area.y - FONT_SIZE - 20
-        return origin_x + FONT_SIZE * self._col_number, origin_y - (FONT_SIZE + LINE_SPAN) * min(self._row_number, MAX_ROW)
+        return origin_x + FONT_SIZE * self._col_number, origin_y - (FONT_SIZE + LINE_SPAN) * min(self._row_number,
+                                                                                                 MAX_ROW)
 
     def _next_col(self):
         if self._col_number == MAX_COL:

@@ -1,5 +1,6 @@
 
 # -*- coding: utf-8 -*-
+from collections import defaultdict
 import yaml
 import os
 
@@ -32,6 +33,9 @@ class GeneralEvent(object):
 class SuccessManager(object):
     # : :type: int
     time = 0
+
+    #: :type:defaultdict
+    _flags = defaultdict(int)
 
     # : :type: str
     file_root = None
@@ -71,7 +75,7 @@ class SuccessManager(object):
 
     def actor_path(self, actor_name, expression):
         expression_file = self._actors[actor_name][expression]
-        return os.path.join(self.file_root, actor_name, expression_file)
+        return os.path.join(self.file_root, 'actors', actor_name, expression_file)
 
     def pop_fixed_event_before(self):
         event = self._event_calendar.get(self.time)

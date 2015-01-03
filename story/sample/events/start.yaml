@@ -1,40 +1,61 @@
-- appear: pawapoke
-  expression: normal
-  say: '一文字30px固定で行間に15pxで表示してる。'
+- say: あれ、ここに来いって言われたけど、誰もいないな。
+- appear:
+    actor: pawapoke
+    expression: normal
+  say: せっかくだし、今の機能の確認でもしておこうか。
+- speaker: pawapoke
+  say: ええと、まずはテキスト関係からかな。
+- say: 一度の表示できる行数は４行、横は２４文字で改行しているみたいだな。
+  clean: true
+- say: ちょっと試してみるか。
+- say: あいうえおかきくけこさしすせそたちつてとなにぬねのまみむめも
+- say: 「。」とかがおかしくならないように気をつけよう。
+- say: 次は文字の色を変える練習をしてみるか。
+  clean: true
+- say: 「
+  continue: true
+  clean: true
+- say: あか
+  continue: true
+  color: [1, 0, 0, 1]
+- say: 」
+- speaker: pawapoke
+  say: あと、表示を遅らせたり出来るみたいだな。
   clean: True
 - speaker: pawapoke
-  say: 'あいうえおかきくけこさしすせそたちつてとなにぬねのまみむめも'
-- speaker: pawapoke
-  say: '横は２６字で改行。'
-- speaker: pawapoke
-  say: 'ちょっとスカスカかな？'
-- speaker: pawapoke
-  say: 'それと、slow命令ってのがあるんだ。'
-  clean: True
-- speaker: pawapoke
-  say: 'それをやると、ゆっくり表示されるようになる。'
-- speaker: pawapoke
-  say: 'こんな風にね・・・・・・。'
+  say: こんな風にね・・・。
   slow: 0
 - speaker: pawapoke
-  say: '0を入れるとデフォルトの遅さなんだ。'
-  clean: True
-- speaker: pawapoke
-  say: 'ちなみにデフォルトは約0.1秒くらいだよ。'
-- speaker: pawapoke
-  say: 'これが0.3秒だよ。'
+  say: もっと遅く・・・。
   slow: 0.3
-- speaker: pawapoke
-  say: '逆に、早くすることもできるんだ。'
-- speaker: pawapoke
-  say: '0.04より小さくすれば数字的には通常の表示より早くなる。'
-- speaker: pawapoke
-  say: 'でも、1フレームに1文字以上は早くならないから、あまり意味がないかもしれないね。'
-- speaker: pawapoke
-  say: '何度か使っているけど、clean命令を入れると・・・'
+- say: これが、表示のクリア。
   clean: True
-- speaker: pawapoke
-  say: '表示されているものがクリアされるよ。'
+- say: きれいさっぱり。
   clean: True
+- say: 話している人が変わると、自動で挿入されるから、その場合は入れなくても大丈夫。
+- say: 次は立ち絵の操作なんだけど・・・。
+- speaker: ren
+  say: パワポケさーん！
+  clean: true
+  appear:
+    actor: ren
+    expression: love
+    direction: right
+    animation:
+      from: right
+      to: right
 - speaker: pawapoke
-  say: '話している人が変わると、自動で挿入されるから、その場合は入れなくても大丈夫。'
+  say: あ、レン。ちょうどいいところに。
+  clean: true
+- say: ちょっと追いかけっこしない？
+- say: なんですか急に。
+  appear:
+    actor: ren
+    expression: sad
+    direction: right
+    position: right
+    direction: left
+    animation: null
+  clean: true
+- say: ちょっと立ち絵のテストがしたくて
+  clean: true
