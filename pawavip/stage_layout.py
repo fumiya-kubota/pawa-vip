@@ -1,3 +1,5 @@
+from kivy.graphics.context_instructions import Rotate, PushMatrix, PopMatrix
+from kivy.properties import StringProperty
 from kivy.animation import Animation, AnimationTransition
 from kivy.uix.image import Image
 from kivy.uix.layout import Layout
@@ -6,52 +8,45 @@ from pawavip.manager import sample_scenario
 
 ACTOR_CENTER = 125
 
+EXPRESSION_COMMAND = 'exp'
+ACTOR_COMMAND = 'actor'
+ID_COMMAND = 'id'
+DIRECTION_COMMAND = 'dir'
+ANIMATION_COMMAND = 'animation'
+POSITION_COMMAND = 'position'
+
 
 class Actor(Image):
     # :type: str
-    _direction = 'left'
+    direction = StringProperty(None)
+
+    # :type: str
+    name = None
 
     def __init__(self, **kwargs):
         super(Actor, self).__init__(**kwargs)
         self.size = self.texture_size
 
-    @property
-    def direction(self):
-        return self._direction
-
-    @direction.setter
-    def direction(self, val):
-        self._direction = val
-
 
 class StageLayout(Layout):
-    # :type: Actor
-    _left_actor = None
+    # :type: dict
+    _actors = {}
 
-    @property
-    def left_actor(self):
-        return self._left_actor
+    def add_actor(self, identifier, actor):
+        if identifier in self._actors:
+            old_actor = actor[identifier]
+            self.remove_widget(old_actor)
+        self._actors[identifier] = actor
+        self.add_widget(actor)
 
-    @left_actor.setter
-    def left_actor(self, val):
-        if self._left_actor:
-            self.remove_widget(self._left_actor)
-        self._left_actor = val
-        self.add_widget(self._left_actor)
+    def get_actor(self, identifier):
+        return self._actors.get(identifier)
 
-    # :type: Actor
-    _right_actor = None
-
-    @property
-    def right_actor(self):
-        return self._right_actor
-
-    @right_actor.setter
-    def right_actor(self, val):
-        if self._right_actor:
-            self.remove_widget(self._right_actor)
-        self._right_actor = val
-        self.add_widget(self._right_actor)
+    def remove_actor(self, identifier):
+        actor = self._actors.pop(identifier)
+        if actor:
+            self.remove_widget(actor)
+            del self._actors[identifier]
 
     def __init__(self, **kwargs):
         super(StageLayout, self).__init__(**kwargs)
@@ -62,54 +57,44 @@ class StageLayout(Layout):
             pos=self._trigger_layout)
 
     def do_layout(self, *largs):
-        if self.left_actor:
-            self.left_actor.y = self.y
-            self.left_actor.center_x = self.x + ACTOR_CENTER
-
-        if self.right_actor:
-            self.right_actor.y = self.y
-            self.right_actor.center_x = self.width - ACTOR_CENTER
+        for actor in self._actors.itervalues():
+            actor.y = self.y
 
     def appear(self, data):
-        info = {
-            'expression': 'normal',
-            'position': 'left',
-            'direction': 'right',
-            'animation': {
-                'from': 'left',
-                'to': 'left'
-            }
-        }
-        info.update(data)
-        actor = Actor(source=sample_scenario.actor_path(info['actor'], info['expression']))
-        actor.direction = info['direction']
+        actor_name = data[ACTOR_COMMAND]
+        actor = Actor(source=sample_scenario.actor_path(actor_name, data[EXPRESSION_COMMAND]))
+        actor.direction = data[DIRECTION_COMMAND]
+        actor.name = actor_name
+        self.add_actor(data.get(ID_COMMAND, actor_name), actor)
+        if ANIMATION_COMMAND in data:
+            animate = data[ANIMATION_COMMAND]
+            from_pos = self._get_pos(animate['from'])
+            to_pos = self._get_pos(animate['to'])
+            actor.center_x = from_pos
+            animation = Animation(center_x=to_pos, duration=0.2, t=AnimationTransition.in_out_cubic)
+            animation.start(actor)
+        elif POSITION_COMMAND in data:
+            pos = self._get_pos(data[POSITION_COMMAND])
+            actor.center_x = pos
 
-        animation = None
-        position = info['position']
-        if info['animation']:
-            a = info['animation']
-            if a['from'] == 'left':
-                actor.center_x = self.x
-            else:
-                actor.center_x = self.width
-
-            position = a['to']
-            animation = Animation(center_x=self.x + ACTOR_CENTER if position == 'left' else self.width - ACTOR_CENTER,
-                                  duration=0.1, transition=AnimationTransition.in_out_circ)
-
-        self.add_widget(actor)
-
-        def set_actor(a, b):
-            if position == 'left':
-                self._left_actor = actor
-            else:
-                self._right_actor = actor
-
-        if animation:
-            animation.bind(on_complete=set_actor)
+    def _get_pos(self, pos):
+        if pos == 'l':
+            return self.x + ACTOR_CENTER
+        elif pos == 'r':
+            return self.x + 800 - ACTOR_CENTER
+        elif pos == 'le':
+            return self.x
+        elif pos == 're':
+            return self.x + 800
         else:
-            set_actor(None, None)
+            return pos
 
+    def change_expression(self, expression):
+        actor = self.get_actor(expression[ID_COMMAND])
+        if actor:
+            actor_name = actor.name
+            actor.source = sample_scenario.actor_path(actor_name, expression[EXPRESSION_COMMAND])
+            actor.size = actor.texture_size
 
-def background_transition(self, animate=False):
-    pass
+    def background_transition(self, animate=False):
+        pass

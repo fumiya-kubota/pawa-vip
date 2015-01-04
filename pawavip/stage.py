@@ -3,8 +3,9 @@ from kivy.uix.anchorlayout import AnchorLayout
 from pawavip.stage_layout import StageLayout
 
 APPEAR_COMMAND = 'appear'
-EXPRESSION_COMMAND = 'expression'
-COMMANDS = (APPEAR_COMMAND, )
+EXPRESSION_COMMAND = 'exp'
+
+COMMANDS = (APPEAR_COMMAND, EXPRESSION_COMMAND)
 
 class Stage(AnchorLayout):
     # : :type: StageLayout
@@ -43,3 +44,5 @@ class Stage(AnchorLayout):
         if val:
             if APPEAR_COMMAND in val:
                 self.stage_layout.appear(val[APPEAR_COMMAND])
+            if EXPRESSION_COMMAND in val:
+                self.stage_layout.change_expression(val[EXPRESSION_COMMAND])

@@ -1,61 +1,107 @@
 - say: あれ、ここに来いって言われたけど、誰もいないな。
-- appear:
+  appear:
     actor: pawapoke
-    expression: normal
-  say: せっかくだし、今の機能の確認でもしておこうか。
+    exp: nandasore
+    dir: r
+    animation:
+      from: le
+      to: l
+- say: せっかくだし、今の機能の確認でもしておこうか。
+  exp:
+    id: pawapoke
+    exp: normal
 - speaker: pawapoke
   say: ええと、まずはテキスト関係からかな。
 - say: 一度の表示できる行数は４行、横は２４文字で改行しているみたいだな。
-  clean: true
+  clear: true
 - say: ちょっと試してみるか。
-- say: あいうえおかきくけこさしすせそたちつてとなにぬねのまみむめも
+  exp:
+    id: pawapoke
+    exp: small_smile
+- say: あいうえおかきくけこさしすせそたちつてとなにぬね
+  continue: t
+  exp:
+    id: pawapoke
+    exp: are
+- say: のまみむめも
+  exp:
+    id: pawapoke
+    exp: smile
 - say: 「。」とかがおかしくならないように気をつけよう。
+  exp:
+    id: pawapoke
+    exp: small_smile
 - say: 次は文字の色を変える練習をしてみるか。
-  clean: true
+  clear: true
+  exp:
+    id: pawapoke
+    exp: normal
 - say: 「
   continue: true
-  clean: true
+  clear: true
+  exp:
+    id: pawapoke
+    exp: operation
 - say: あか
   continue: true
   color: [1, 0, 0, 1]
 - say: 」
+- say: 「
+  continue: true
+  exp:
+    id: pawapoke
+    exp: nandasore
+- say: あお
+  continue: true
+  color: [0, 0, 1, 1]
+- say: 」
+- say: 「
+  continue: true
+  exp:
+    id: pawapoke
+    exp: banzai
+- say: きいろ
+  continue: true
+  color: [1, 1, 0, 1]
+- say: 」
 - speaker: pawapoke
   say: あと、表示を遅らせたり出来るみたいだな。
-  clean: True
+  clear: True
+  exp:
+    id: pawapoke
+    exp: normal
 - speaker: pawapoke
-  say: こんな風にね・・・。
+  say: こんな感じかな・・・。
   slow: 0
 - speaker: pawapoke
   say: もっと遅く・・・。
   slow: 0.3
 - say: これが、表示のクリア。
-  clean: True
+  clear: True
 - say: きれいさっぱり。
-  clean: True
-- say: 話している人が変わると、自動で挿入されるから、その場合は入れなくても大丈夫。
+  clear: True
 - say: 次は立ち絵の操作なんだけど・・・。
 - speaker: ren
   say: パワポケさーん！
-  clean: true
+  clear: true
   appear:
     actor: ren
-    expression: love
-    direction: right
+    exp: love
+    dir: l
     animation:
-      from: right
-      to: right
+      from: re
+      to: r
 - speaker: pawapoke
   say: あ、レン。ちょうどいいところに。
-  clean: true
+  clear: true
 - say: ちょっと追いかけっこしない？
 - say: なんですか急に。
-  appear:
-    actor: ren
-    expression: sad
-    direction: right
-    position: right
-    direction: left
-    animation: null
-  clean: true
+  exp:
+    id: ren
+    exp: sad
+  clear: true
 - say: ちょっと立ち絵のテストがしたくて
-  clean: true
+  exp:
+    id: pawapoke
+    exp: small_smile
+  clear: true

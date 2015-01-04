@@ -1,4 +1,5 @@
 # cording:utf-8
+import weakref
 from kivy.properties import ObjectProperty
 
 from kivy.clock import Clock
@@ -29,6 +30,7 @@ class AdventureScreen(Screen):
         self.stage.update(dt)
 
     def on_enter(self, *args):
+        self.board.adventure_screen = weakref.proxy(self)
         Clock.schedule_interval(self.update, 1.0 / 60.0)
         sample_scenario.scenario_name = 'sample'
         self.event = sample_scenario.pop_fixed_event_before()
@@ -44,15 +46,11 @@ class AdventureScreen(Screen):
         self.proceed_scenario()
 
     def proceed_scenario(self):
-        self.board.waiting = False
-        while not self.board.waiting:
-            if self.event:
-                try:
-                    command = self.event.next()
-                except StopIteration:
-                    self.event = None
-                    return
-                self.board.set_next(command)
-                self.stage.set_next(command)
-            else:
-                self.board.waiting = True
+        if self.event:
+            try:
+                command = self.event.next()
+            except StopIteration:
+                self.event = None
+                return
+            self.board.set_next(command)
+            self.stage.set_next(command)

@@ -6,11 +6,12 @@ from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 
 SAY_COMMAND = 'say'
-CLEAN_COMMAND = 'clean',
+CLEAR_COMMAND = 'clear'
 SLOW_COMMAND = 'slow'
 CONTINUE_COMMAND = 'continue'
+COLOR_COMMAND = 'color'
 
-COMMANDS = (SAY_COMMAND, CLEAN_COMMAND, SLOW_COMMAND)
+COMMANDS = (SAY_COMMAND, CLEAR_COMMAND, SLOW_COMMAND)
 
 FONT_SIZE = 30
 MAX_ROW = 3
@@ -29,11 +30,11 @@ class Letter(Label):
 
 
 class MessageBoard(Widget):
+    # : :type: AdventureScreen
+    adventure_screen = None
+
     # : :type: Widget
     message_area = ObjectProperty(None)
-
-    # : :type: bool
-    waiting = False
 
     # : :type: bool
     processing = False
@@ -81,12 +82,17 @@ class MessageBoard(Widget):
                 self._index += 1
                 if self._index == len(self._letters):
                     self.processing = False
+                    if self._continue:
+                        self.adventure_screen.proceed_scenario()
 
     def display_all(self):
         for l in self._letters[self._index:]:
             self._show_letter(l, animate=False)
         self.processing = False
         self._index = len(self._letters)
+        while self._continue:
+            self.adventure_screen.proceed_scenario()
+            self.display_all()
 
     def _show_letter(self, letter, animate=True):
         def show_letter(a, b):
@@ -116,8 +122,8 @@ class MessageBoard(Widget):
         if val:
             self.processing = True
             # clean
-            if val.get('clean'):
-                self._clean_board()
+            if CLEAR_COMMAND in val:
+                self._clear_board()
 
             # slow
             if SLOW_COMMAND in val:
@@ -128,7 +134,7 @@ class MessageBoard(Widget):
             if not self._continue and self._letters and not self._col_number == 0:
                 self._next_row()
 
-            text_color = val.get('color', (1, 1, 1, 1))
+            text_color = val.get(COLOR_COMMAND, (1, 1, 1, 1))
             for c in val[SAY_COMMAND]:
                 l = Letter(text=c, font_size=FONT_SIZE, font_name='resource/fonts/rounded-mgenplus-1c-regular.ttf',
                            size=(FONT_SIZE, FONT_SIZE), size_hint=(None, None), color=text_color)
@@ -141,9 +147,8 @@ class MessageBoard(Widget):
 
             # continue命令が入っている場合は改行されない、入力待ちにもならない。
             self._continue = CONTINUE_COMMAND in val
-            self.waiting = not self._continue
         else:
-            self.waiting = False
+            self.adventure_screen.proceed_scenario()
 
     def _calc_pos(self):
         origin_x = self.message_area.x
@@ -172,9 +177,10 @@ class MessageBoard(Widget):
         for l in self._display_letters:
             animation = Animation(y=l.y + (FONT_SIZE + LINE_SPAN), duration=0.02 if animate else 0.0)
             animation.start(l)
-        animation.bind(on_complete=completion)
+        else:
+            animation.bind(on_complete=completion)
 
-    def _clean_board(self):
+    def _clear_board(self):
         self._index = 0
         self._letters = []
         self._message_queue = [[]]
