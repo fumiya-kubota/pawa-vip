@@ -1,20 +1,20 @@
 pawapoke:
-  normal: normal.gif
-  operation: operation.gif
-  banzai: banzai.gif
-  smile: smile.gif
-  small_smile: small_smile.gif
-  are: are.gif
-  ge: ge.gif
-  konwaku: konwaku.gif
-  mugon: mugon.gif
-  nandasore: nandasore.gif
+  normal: normal.png
+  operation: operation.png
+  banzai: banzai.png
+  smile: smile.png
+  small_smile: small_smile.png
+  are: are.png
+  ge: ge.png
+  konwaku: konwaku.png
+  mugon: mugon.png
+  nandasore: nandasore.png
 
 ren:
-  normal: normal.gif
-  sad: sad.gif
-  bikkuri: bikkuri.gif
-  love: love.gif
-  smile: smile.gif
-  thinking: thinking.gif
-  angry: angry.gif
+  normal: normal.png
+  sad: sad.png
+  bikkuri: bikkuri.png
+  love: love.png
+  smile: smile.png
+  thinking: thinking.png
+  angry: angry.png
