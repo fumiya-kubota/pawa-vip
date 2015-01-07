@@ -13,7 +13,7 @@ Builder.load_file('pawavip/adventure.kv')
 
 
 class AdventureScreen(Screen):
-    #: :type: MessageBoard
+    # : :type: MessageBoard
     board = ObjectProperty(None)
 
     #: :type:Stage
@@ -27,10 +27,11 @@ class AdventureScreen(Screen):
 
     def update(self, dt):
         self.board.update(dt)
-        self.stage.update(dt)
 
     def on_enter(self, *args):
-        self.board.adventure_screen = weakref.proxy(self)
+        weakref_proxy = weakref.proxy(self)
+        self.board.adventure_screen = weakref_proxy
+        self.stage.adventure_screen = weakref_proxy
         Clock.schedule_interval(self.update, 1.0 / 60.0)
         sample_scenario.scenario_name = 'sample'
         self.event = sample_scenario.pop_fixed_event_before()
@@ -40,17 +41,17 @@ class AdventureScreen(Screen):
         Clock.unschedule(self.update, True)
 
     def click(self):
-        if self.board.processing:
-            self.board.display_all()
-            return
-        self.proceed_scenario()
+        if self.stage.next and not self.board.processing:
+            self.proceed_scenario()
 
     def proceed_scenario(self):
-        if self.event:
-            try:
-                command = self.event.next()
-            except StopIteration:
-                self.event = None
-                return
-            self.board.set_next(command)
-            self.stage.set_next(command)
+        self.board.next = self.stage.next = True
+        while self.board.next and self.stage.next:
+            if self.event:
+                try:
+                    command = self.event.next()
+                except StopIteration:
+                    self.event = None
+                    return
+                self.stage.set_next(command)
+                self.board.set_next(command)

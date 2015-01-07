@@ -9,7 +9,11 @@ pawapoke:
   konwaku: konwaku.png
   mugon: mugon.png
   nandasore: nandasore.png
-
+  namida: namida.png
+  uwa: uwa.png
+  potun: potun.png
+  kama: kama.png
+  munen: munen.png
 ren:
   normal: normal.png
   sad: sad.png
@@ -18,3 +22,5 @@ ren:
   smile: smile.png
   thinking: thinking.png
   angry: angry.png
+  close: close.png
+  close-love: close-love.png

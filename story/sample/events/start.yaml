@@ -6,13 +6,13 @@
     animation:
       from: le
       to: l
-- say: せっかくだし、今の機能の確認でもしておこうか。
+- say: せっかくだし、/今の機能の確認でもしておこうか。
   exp:
     id: pawapoke
     exp: normal
 - speaker: pawapoke
   say: ええと、まずはテキスト関係からかな。
-- say: 一度の表示できる行数は４行、横は２４文字で改行しているみたいだな。
+- say: 一度の表示できる行数は４行、横は２４文字で改行しているみたいだ。
   clear: true
 - say: ちょっと試してみるか。
   exp:
@@ -31,6 +31,7 @@
   exp:
     id: pawapoke
     exp: small_smile
+- say: もちろん/改行の位置を指定/することも/できるよ。
 - say: 次は文字の色を変える練習をしてみるか。
   clear: true
   exp:
@@ -93,15 +94,157 @@
       to: r
 - speaker: pawapoke
   say: あ、レン。ちょうどいいところに。
+  exp:
+    id: pawapoke
+    exp: normal
   clear: true
-- say: ちょっと追いかけっこしない？
+- say: 俺と鬼ごっこしてくれない？
 - say: なんですか急に。
   exp:
     id: ren
     exp: sad
   clear: true
-- say: ちょっと立ち絵のテストがしたくて
+- say: ちょっと立ち絵のテストがしたくてね。
   exp:
     id: pawapoke
     exp: small_smile
   clear: true
+- speaker: pawapoke
+  say: レンが勝ったら、/なんでも言うこと聞いてあげるからさ。
+- speaker: ren
+  say: なんでも！？/いいんですか？そんなこと言って。
+  exp:
+    id: ren
+    exp: bikkuri
+- speaker: pawapoke
+  say: もちろん！
+  exp:
+    id: pawapoke
+    exp: smile
+- say: レンが勝ったらだけどね。
+  exp:
+    id: pawapoke
+    exp: kama
+- exp:
+    id: pawapoke
+    exp: potun
+- speaker: ren
+  say: わかりました、
+  exp:
+    id: ren
+    exp: thinking
+- exp:
+    id: pawapoke
+    exp: uwa
+- say: 全力でお相手します。
+  exp:
+    id: ren
+    exp: angry
+- move:
+    id: pawapoke
+    to: lo
+  continue: t
+- move:
+    id: ren
+    to: lo
+    duration: 0.3
+- speaker: pawapoke
+  say: まだオニ決めてなーい！
+  dir:
+    id: pawapoke
+    dir: l
+- appear:
+    actor: pawapoke
+    exp: uwa
+    dir: r
+    animation:
+      from: le
+      to: l
+      chain: t
+  say: うわああああああああああああああああああ
+  clear: t
+- appear:
+    actor: ren
+    exp: angry
+    dir: r
+    animation:
+      from: le
+      to: l
+- move:
+    id: pawapoke
+    to: r
+    chain: t
+- dir:
+    id: pawapoke
+    dir: l
+  move:
+    id: pawapoke
+    to: l
+- move:
+    id: ren
+    to: r
+    chain: t
+- dir:
+    id: ren
+    dir: l
+- move:
+    id: pawapoke
+    to: lo
+- move:
+    id: ren
+    to: l
+    chain: t
+- move:
+    id: ren
+    to: lo
+    chain: t
+- speaker: pawapoke
+  say: はあ、はあ、ここまでくれば・・・・。
+  appear:
+    actor: pawapoke
+    exp: munen
+    dir: r
+    animation:
+      from: le
+      to: l
+- speaker: ren
+  say: お疲れ様です。
+  appear:
+    actor: ren
+    exp: smile
+    dir: r
+    animation:
+      from: lo
+      to: le
+- speaker: pawapoke
+  say: あ、ありがとう
+  exp:
+    id: pawapoke
+    exp: smile
+  continue: t
+- say: ・・・・・・・・・・・・・・・・・
+  slow: 0
+  continue: t
+- exp:
+    id: ren
+    exp: close-love
+- say: ・・・・・・・・・・・・・・・・・・・・・・・・
+  slow: 0
+  exp:
+    id: pawapoke
+    exp: are
+- speaker: pawapoke
+  say: うわあああああああああああああああ
+  clear: t
+  exp:
+    id: pawapoke
+    exp: uwa
+  move:
+    id: pawapoke
+    to: ro
+- speaker: ren
+  say: そっちは、行き止まりですよ。
+  move:
+    id: ren
+    to: l
+    duration: 1

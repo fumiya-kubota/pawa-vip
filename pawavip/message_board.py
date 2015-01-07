@@ -10,8 +10,8 @@ CLEAR_COMMAND = 'clear'
 SLOW_COMMAND = 'slow'
 CONTINUE_COMMAND = 'continue'
 COLOR_COMMAND = 'color'
-
-COMMANDS = (SAY_COMMAND, CLEAR_COMMAND, SLOW_COMMAND)
+SPEAKER_COMMAND = 'speaker'
+COMMANDS = (SAY_COMMAND, CLEAR_COMMAND, SLOW_COMMAND, SPEAKER_COMMAND)
 
 FONT_SIZE = 30
 MAX_ROW = 3
@@ -33,6 +33,12 @@ class MessageBoard(Widget):
     # : :type: AdventureScreen
     adventure_screen = None
 
+    # : :type: bool
+    next = False
+
+    # : :type: str
+    speaker = None
+
     # : :type: Widget
     message_area = ObjectProperty(None)
 
@@ -44,6 +50,8 @@ class MessageBoard(Widget):
 
     # : :type: float
     _total_time = 0
+
+    # : :type: float
     _span_time = 0
 
     # : :type: int
@@ -71,28 +79,27 @@ class MessageBoard(Widget):
     _continue = False
 
     def update(self, dt):
-        if self.data:
-            self._total_time += dt
-            index_ = min(int((self._total_time - self._span_time) / self._speed + self._index),
-                         len(self._letters))
-            if self._index < index_:
-                self._span_time = self._total_time
-                l = self._letters[self._index]
-                self._show_letter(l)
-                self._index += 1
-                if self._index == len(self._letters):
-                    self.processing = False
-                    if self._continue:
-                        self.adventure_screen.proceed_scenario()
+        self._total_time += dt
+        index_ = min(int((self._total_time - self._span_time) / self._speed + self._index),
+                     len(self._letters))
+        if self._index < index_:
+            self._span_time = self._total_time
+            l = self._letters[self._index]
+            self._show_letter(l)
+            self._index += 1
+            if self._index == len(self._letters):
+                self.processing = False
+                if self._continue:
+                    self.adventure_screen.proceed_scenario()
 
-    def display_all(self):
-        for l in self._letters[self._index:]:
-            self._show_letter(l, animate=False)
-        self.processing = False
-        self._index = len(self._letters)
-        while self._continue:
-            self.adventure_screen.proceed_scenario()
-            self.display_all()
+    # def display_all(self):
+    #     for l in self._letters[self._index:]:
+    #         self._show_letter(l, animate=False)
+    #     self.processing = False
+    #     self._index = len(self._letters)
+    #     while self._continue:
+    #         self.adventure_screen.proceed_scenario()
+    #         self.display_all()
 
     def _show_letter(self, letter, animate=True):
         def show_letter(a, b):
@@ -122,6 +129,10 @@ class MessageBoard(Widget):
         if val:
             self.processing = True
             # clean
+            if SPEAKER_COMMAND in val and not self.speaker == val[SPEAKER_COMMAND]:
+                self._clear_board()
+                self.speaker = val[SPEAKER_COMMAND]
+
             if CLEAR_COMMAND in val:
                 self._clear_board()
 
@@ -136,19 +147,23 @@ class MessageBoard(Widget):
 
             text_color = val.get(COLOR_COMMAND, (1, 1, 1, 1))
             for c in val[SAY_COMMAND]:
-                l = Letter(text=c, font_size=FONT_SIZE, font_name='resource/fonts/rounded-mgenplus-1c-regular.ttf',
-                           size=(FONT_SIZE, FONT_SIZE), size_hint=(None, None), color=text_color)
-                self._letters.append(l)
-                l.pos = self._calc_pos()
-                l.col_number = self._col_number
-                l.row_number = self._row_number
-                self._message_queue[-1].append(l)
-                self._next_col()
+                if c == '/':
+                    self._next_row()
+                else:
+                    l = Letter(text=c, font_size=FONT_SIZE, font_name='resource/fonts/rounded-mgenplus-1c-regular.ttf',
+                               size=(FONT_SIZE, FONT_SIZE), size_hint=(None, None), color=text_color)
+                    self._letters.append(l)
+                    l.pos = self._calc_pos()
+                    l.col_number = self._col_number
+                    l.row_number = self._row_number
+                    self._message_queue[-1].append(l)
+                    self._next_col()
 
             # continue命令が入っている場合は改行されない、入力待ちにもならない。
             self._continue = CONTINUE_COMMAND in val
+            self.next = False
         else:
-            self.adventure_screen.proceed_scenario()
+            self.next = True
 
     def _calc_pos(self):
         origin_x = self.message_area.x

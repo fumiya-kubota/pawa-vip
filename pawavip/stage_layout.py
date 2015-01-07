@@ -14,6 +14,7 @@ ID_COMMAND = 'id'
 DIRECTION_COMMAND = 'dir'
 ANIMATION_COMMAND = 'animation'
 POSITION_COMMAND = 'position'
+CHAIN_COMMAND = 'chain'
 
 
 class Actor(Image):
@@ -34,7 +35,7 @@ class StageLayout(Layout):
 
     def add_actor(self, identifier, actor):
         if identifier in self._actors:
-            old_actor = actor[identifier]
+            old_actor = self._actors[identifier]
             self.remove_widget(old_actor)
         self._actors[identifier] = actor
         self.add_widget(actor)
@@ -46,7 +47,6 @@ class StageLayout(Layout):
         actor = self._actors.pop(identifier)
         if actor:
             self.remove_widget(actor)
-            del self._actors[identifier]
 
     def __init__(self, **kwargs):
         super(StageLayout, self).__init__(**kwargs)
@@ -60,7 +60,7 @@ class StageLayout(Layout):
         for actor in self._actors.itervalues():
             actor.y = self.y
 
-    def appear(self, data):
+    def appear(self, data, completion):
         actor_name = data[ACTOR_COMMAND]
         actor = Actor(source=sample_scenario.actor_path(actor_name, data[EXPRESSION_COMMAND]))
         actor.direction = data[DIRECTION_COMMAND]
@@ -68,16 +68,28 @@ class StageLayout(Layout):
         self.add_actor(data.get(ID_COMMAND, actor_name), actor)
         if ANIMATION_COMMAND in data:
             animate = data[ANIMATION_COMMAND]
-            from_pos = self._get_pos(animate['from'])
-            to_pos = self._get_pos(animate['to'])
+            from_pos = self._get_pos(animate['from'], actor)
+            to_pos = self._get_pos(animate['to'], actor)
             actor.center_x = from_pos
             animation = Animation(center_x=to_pos, duration=0.2, t=AnimationTransition.in_out_cubic)
+
+            chain = CHAIN_COMMAND in animate
+            if chain:
+                self._chain_animation(animation, completion)
             animation.start(actor)
+            return not chain
         elif POSITION_COMMAND in data:
             pos = self._get_pos(data[POSITION_COMMAND])
             actor.center_x = pos
+            return True
 
-    def _get_pos(self, pos):
+    @staticmethod
+    def _chain_animation(animation, method):
+        def completion(a, b):
+            method()
+        animation.bind(on_complete=completion)
+
+    def _get_pos(self, pos, actor=None):
         if pos == 'l':
             return self.x + ACTOR_CENTER
         elif pos == 'r':
@@ -86,6 +98,10 @@ class StageLayout(Layout):
             return self.x
         elif pos == 're':
             return self.x + 800
+        elif pos == 'lo':
+            return self._get_pos('le') - actor.width
+        elif pos == 'ro':
+            return self._get_pos('re') + actor.width
         else:
             return pos
 
@@ -95,6 +111,23 @@ class StageLayout(Layout):
             actor_name = actor.name
             actor.source = sample_scenario.actor_path(actor_name, expression[EXPRESSION_COMMAND])
             actor.size = actor.texture_size
+
+    def change_direction(self, direction):
+        actor = self.get_actor(direction[ID_COMMAND])
+        if actor:
+            actor.direction = direction[DIRECTION_COMMAND]
+
+    def move(self, move, completion):
+        actor = self.get_actor(move[ID_COMMAND])
+        if actor:
+            to = move['to']
+            animation = Animation(center_x=self._get_pos(to, actor), duration=move.get('duration', 0.25))
+            chain = CHAIN_COMMAND in move
+            if chain:
+                self._chain_animation(animation, completion)
+            animation.start(actor)
+            return not chain
+        return True
 
     def background_transition(self, animate=False):
         pass
