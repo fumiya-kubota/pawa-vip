@@ -58,8 +58,28 @@
             id: area
             size: 780, 190.
             x: self.parent.x + 10
-            top: self.parent.height - 25
+            top: self.parent.height - 30
             canvas.before:
+                Color:
+                    rgb: 0, 0, 0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        Widget:
+            size: self.parent.width - 20, 30
+            pos: self.parent.x + 10, self.parent.height - self.height
+            canvas:
+                Color:
+                    rgb: 1, 0, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        Widget:
+            size: self.parent.width - 20, 20
+            pos: self.parent.x + 10, self.parent.height - 30 - self.height
+            canvas:
                 Color:
                     rgb: 0, 0, 0
                 Rectangle:

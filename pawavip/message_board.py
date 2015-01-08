@@ -184,16 +184,19 @@ class MessageBoard(Widget):
 
     def _scroll_message(self, completion, animate=True):
         old_row = self._message_queue.pop(0)
-        for l in old_row:
-            self.message_area.remove_widget(l)
-            self._display_letters.remove(l)
+
+        def remove_old_row(a, b):
+            completion(a, b)
+            for label in old_row:
+                self.message_area.remove_widget(label)
+                self._display_letters.remove(label)
 
         animation = None
         for l in self._display_letters:
-            animation = Animation(y=l.y + (FONT_SIZE + LINE_SPAN), duration=0.02 if animate else 0.0)
+            animation = Animation(y=l.y + (FONT_SIZE + LINE_SPAN), duration=0.15 if animate else 0.0)
             animation.start(l)
         else:
-            animation.bind(on_complete=completion)
+            animation.bind(on_complete=remove_old_row)
 
     def _clear_board(self):
         self._index = 0
@@ -202,3 +205,7 @@ class MessageBoard(Widget):
         self._total_time = self._span_time = 0
         self._col_number = self._row_number = 0
         self.message_area.clear_widgets()
+
+    def __init__(self, **kwargs):
+        super(MessageBoard, self).__init__(**kwargs)
+
