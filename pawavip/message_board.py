@@ -78,7 +78,13 @@ class MessageBoard(Widget):
     # : :type: bool
     _continue = False
 
+    # : :type: bool
+    _scrolling = False
+
     def update(self, dt):
+        if self._scrolling:
+            return
+
         self._total_time += dt
         index_ = min(int((self._total_time - self._span_time) / self._speed + self._index),
                      len(self._letters))
@@ -101,13 +107,13 @@ class MessageBoard(Widget):
     #         self.adventure_screen.proceed_scenario()
     #         self.display_all()
 
-    def _show_letter(self, letter, animate=True):
+    def _show_letter(self, letter):
         def show_letter(a, b):
             self.message_area.add_widget(letter)
             self._display_letters.append(letter)
 
         if letter.col_number == 0 and letter.row_number > MAX_ROW:
-            self._scroll_message(show_letter, animate=animate)
+            self._scroll_message(show_letter)
         else:
             show_letter(None, None)
 
@@ -182,10 +188,11 @@ class MessageBoard(Widget):
         self._row_number += 1
         self._message_queue.append([])
 
-    def _scroll_message(self, completion, animate=True):
+    def _scroll_message(self, completion):
         old_row = self._message_queue.pop(0)
-
+        self._scrolling = True
         def remove_old_row(a, b):
+            self._scrolling = False
             completion(a, b)
             for label in old_row:
                 self.message_area.remove_widget(label)
@@ -193,7 +200,7 @@ class MessageBoard(Widget):
 
         animation = None
         for l in self._display_letters:
-            animation = Animation(y=l.y + (FONT_SIZE + LINE_SPAN), duration=0.15 if animate else 0.0)
+            animation = Animation(y=l.y + (FONT_SIZE + LINE_SPAN), duration=0.1)
             animation.start(l)
         else:
             animation.bind(on_complete=remove_old_row)
