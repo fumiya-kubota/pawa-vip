@@ -6,8 +6,11 @@ from pawavip.adventure_screen import AdventureScreen
 class PawaVipApp(App):
     def build(self):
         root = ScreenManager()
-        root.add_widget(AdventureScreen(name='adventure'))
         return root
+
+    def on_start(self):
+        self.root.add_widget(AdventureScreen(name='adventure'))
+
 
 if __name__ == '__main__':
     PawaVipApp().run()

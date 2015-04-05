@@ -1,6 +1,7 @@
 
 # -*- coding: utf-8 -*-
 from collections import defaultdict
+from kivy.event import EventDispatcher
 import yaml
 import os
 
@@ -8,26 +9,57 @@ PATH_ROOT = 'story'
 SCENARIO_FILE = 'scenario.yaml'
 ACTORS_FILE = 'actors/actors.yaml'
 
+SAY_COMMAND = 'say'
+CLEAR_COMMAND = 'clear'
+SLOW_COMMAND = 'slow'
+COLOR_COMMAND = 'color'
+SPEAKER_COMMAND = 'speaker'
 
-class GeneralEvent(object):
+APPEAR_COMMAND = 'appear'
+EXPRESSION_COMMAND = 'exp'
+DIRECTION_COMMAND = 'dir'
+MOVE_COMMAND = 'move'
+CONTINUE_COMMAND = 'continue'
+REMOVE_COMMAND = 'remove'
+
+ACTOR_COMMAND = 'actor'
+ID_COMMAND = 'id'
+ANIMATION_COMMAND = 'animation'
+POSITION_COMMAND = 'position'
+CHAIN_COMMAND = 'chain'
+
+
+class MessageManager(EventDispatcher):
     #: :type: tuple
     scenario = None
 
     #: :type: int
     index = 0
 
+    __events__ = ('on_start', 'on_end', )
+
     def __init__(self, scenario):
         self.scenario = scenario
 
-    def __iter__(self):
-        return self
-
-    def next(self):
+    def next_commands(self):
         if self.index == len(self.scenario):
-            raise StopIteration
-        data = self.scenario[self.index]
-        self.index += 1
-        return data
+            self.dispatch('on_end')
+            return
+
+        commands = []
+        while True:
+            data = self.scenario[self.index]
+            commands.append(data)
+            self.index += 1
+            if SAY_COMMAND in data or CHAIN_COMMAND in data:
+                break
+        return commands
+
+    def on_end(self, *args):
+        pass
+
+    def on_start(self, *args):
+        pass
 
 
 class SuccessManager(object):
@@ -90,7 +122,7 @@ class SuccessManager(object):
     def _event_pop(self, event):
         with open(os.path.join(self.file_root, 'events', '{}.yaml'.format(event))) as fp:
             data = yaml.load(fp)
-        return GeneralEvent(data)
+        return MessageManager(data)
 
     def load_save_data(self, fp):
         pass

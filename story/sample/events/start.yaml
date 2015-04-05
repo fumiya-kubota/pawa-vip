@@ -160,7 +160,7 @@
     animation:
       from: le
       to: l
-      chain: t
+  chain: t
   say: うわああああああああああああああああああ
   clear: t
 - appear:
@@ -173,7 +173,7 @@
 - move:
     id: pawapoke
     to: r
-    chain: t
+  chain: t
 - dir:
     id: pawapoke
     dir: l
@@ -183,7 +183,7 @@
 - move:
     id: ren
     to: r
-    chain: t
+  chain: t
 - dir:
     id: ren
     dir: l
@@ -193,11 +193,11 @@
 - move:
     id: ren
     to: l
-    chain: t
+  chain: t
 - move:
     id: ren
     to: lo
-    chain: t
+  chain: t
 - speaker: pawapoke
   say: はあ、はあ、ここまでくれば・・・・。
   appear:
