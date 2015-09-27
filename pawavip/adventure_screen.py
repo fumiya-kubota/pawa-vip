@@ -1,8 +1,5 @@
 # cording:utf-8
-import weakref
 from kivy.properties import ObjectProperty
-
-from kivy.clock import Clock
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from pawavip.stage import Stage
@@ -81,7 +78,7 @@ class AdventureScreen(Screen):
 
     def __init__(self, **kw):
         super(AdventureScreen, self).__init__(**kw)
-
+    
     def on_enter(self, *args):
         self.do_layout()
         sample_scenario.scenario_name = 'sample'

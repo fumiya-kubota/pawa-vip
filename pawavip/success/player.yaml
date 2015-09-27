@@ -1,0 +1,24 @@
+player:
+  name: "",
+  # left or right
+  piching: "right",
+  batting: "right",
+
+  # 野手能力
+  contact: 0,
+  power: 0,
+  sprint: 5,
+  arm: 5,
+  fielding: 5,
+  error: 5,
+
+  # 投手能力
+  speed: 120,
+  stamina: 0,
+  control: 80,
+
+  curve: 0,
+  slider: 0,
+  shoot: 0,
+  forkball: 0,
+  sinker: 0

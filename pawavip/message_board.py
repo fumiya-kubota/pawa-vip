@@ -1,6 +1,7 @@
 # coding=utf-8
 
-from kivy.properties import ObjectProperty, Clock
+from kivy.properties import ObjectProperty
+from kivy.clock import Clock
 from kivy.animation import Animation
 from kivy.lang import Builder
 from kivy.uix.label import Label
@@ -106,6 +107,43 @@ class MessageBoard(Widget):
     # : :type: bool
     _continue = False
 
+    def interpretation(self, command):
+        if command:
+            self._continue = command.get(manager.CONTINUE_COMMAND, False)
+
+            if manager.SPEAKER_COMMAND in command and not self.speaker == command[manager.SPEAKER_COMMAND]:
+                self._clear_board()
+                self.speaker = command[manager.SPEAKER_COMMAND]
+
+            if manager.CLEAR_COMMAND in command:
+                self._clear_board()
+
+            # slow
+            if manager.SLOW_COMMAND in command:
+                speed = SLOW_SPEED_DEFAULT if command[manager.SLOW_COMMAND] == 0 else command[manager.SLOW_COMMAND]
+                self._speed = speed
+            else:
+                self._speed = SPEED_DEFAULT
+
+            text_color = command.get(manager.COLOR_COMMAND, (1, 1, 1, 1))
+            if manager.SAY_COMMAND in command:
+                for c in command[manager.SAY_COMMAND]:
+                    if c == '/':
+                        self._next_row()
+                    else:
+                        l = Letter(text=c, font_size=self.FONT_SIZE,
+                                   font_name='resource/fonts/rounded-mgenplus-1c-regular.ttf',
+                                   size=(self.FONT_SIZE, self.FONT_SIZE), size_hint=(None, None), color=text_color)
+                        self._letters.append(l)
+                        l.pos = self._calc_pos()
+                        l.col_number = self._col_number
+                        l.row_number = self._row_number
+                        self._message_queue[-1].append(l)
+                        self._next_col()
+                else:
+                    if not self._continue and self._letters and not self._col_number == 0:
+                        self._next_row()
+
     def max_row(self):
         return int(self.message_area.height / (self.FONT_SIZE + self.LINE_SPAN)) - 1
 
@@ -137,41 +175,7 @@ class MessageBoard(Widget):
 
     def set_commands(self, commands):
         for command in commands:
-            if command:
-                self._continue = command.get(manager.CONTINUE_COMMAND, False)
-
-                if manager.SPEAKER_COMMAND in command and not self.speaker == command[manager.SPEAKER_COMMAND]:
-                    self._clear_board()
-                    self.speaker = command[manager.SPEAKER_COMMAND]
-
-                if manager.CLEAR_COMMAND in command:
-                    self._clear_board()
-
-                # slow
-                if manager.SLOW_COMMAND in command:
-                    speed = SLOW_SPEED_DEFAULT if command[manager.SLOW_COMMAND] == 0 else command[manager.SLOW_COMMAND]
-                    self._speed = speed
-                else:
-                    self._speed = SPEED_DEFAULT
-
-                text_color = command.get(manager.COLOR_COMMAND, (1, 1, 1, 1))
-                if manager.SAY_COMMAND in command:
-                    for c in command[manager.SAY_COMMAND]:
-                        if c == '/':
-                            self._next_row()
-                        else:
-                            l = Letter(text=c, font_size=self.FONT_SIZE,
-                                       font_name='resource/fonts/rounded-mgenplus-1c-regular.ttf',
-                                       size=(self.FONT_SIZE, self.FONT_SIZE), size_hint=(None, None), color=text_color)
-                            self._letters.append(l)
-                            l.pos = self._calc_pos()
-                            l.col_number = self._col_number
-                            l.row_number = self._row_number
-                            self._message_queue[-1].append(l)
-                            self._next_col()
-                    else:
-                        if not self._continue and self._letters and not self._col_number == 0:
-                            self._next_row()
+            self.interpretation(command)
         else:
             Clock.schedule_interval(self._update, self._speed)
 
@@ -218,7 +222,3 @@ class MessageBoard(Widget):
         self._message_queue = [[]]
         self._col_number = self._row_number = 0
         self.message_area.clear_widgets()
-
-    def __init__(self, **kwargs):
-        super(MessageBoard, self).__init__(**kwargs)
-
