@@ -1,0 +1,21 @@
+player:
+  name: ""
+  piching: right
+  batting: right
+
+  contact: 0
+  power: 0
+  sprint: 5
+  arm: 5
+  fielding: 5
+  error: 5
+
+  speed: 120
+  stamina: 0
+  control: 80
+
+  curve: 0
+  slider: 0
+  shoot: 0
+  forkball: 0
+  sinker: 0
