@@ -3,6 +3,7 @@ Kivy==1.9.0-dev
 Kivy-Garden==0.1.1
 Pillow==2.7.0
 PyYAML==3.11
+nose==1.3.7
 pygame==1.9.2a0
 requests==2.5.1
 wsgiref==0.1.2
