@@ -11,6 +11,7 @@ class Store(object):
             fp.write(json.dump(self._data))
 
     def restore_from(self, file_name):
+        print file_name
         with open(file_name) as fp:
             self._data = json.load(fp)
 
@@ -18,9 +19,9 @@ class Store(object):
         return self._data.get(key)
 
     def set_value(self, key, value=None, value_func=None):
-        if value_func:
+        if value_func is not None:
             self._data[key] = value_func(self._data.get(key))
-        elif value:
+        elif value is not None:
             self._data[key] = value
 
     def add(self, key, value):
